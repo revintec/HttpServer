@@ -4,7 +4,10 @@ public interface IHttpHandler{
     public static interface IHttpContext{
         void abort();
     }
-    public static interface IComponentLoader{IHttpHandler loadComponent(String mod);}
+    /** close() will be called when HttpServer is shutting down */
+    public static interface IComponentLoader extends AutoCloseable{
+        IHttpHandler loadComponent(String mod);
+    }
     /**
      *
      * @param context

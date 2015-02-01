@@ -31,8 +31,10 @@ public class Bootstrap implements IComponentLoader,IHttpHandler{
     }
     public void attachModules(){
         String databaseRoot="databases/";
-        try{Class.forName("org.sqlite.JDBC");}
-        catch(Exception e){Utils.err("error loading database driver");}
+        try{
+            Class.forName("org.sqlite.JDBC");
+            Utils.log("database root: "+databaseRoot);
+        }catch(Exception e){Utils.err("error loading database driver");}
         // add databases here...
         mods.put("/echo",this);
         if(fileServerRoot!=null){
@@ -54,6 +56,7 @@ public class Bootstrap implements IComponentLoader,IHttpHandler{
                 String addr=req.getRemoteAddress();
                 if(!"0:0:0:0:0:0:0:1".equals(addr)&&!"127.0.0.1".equals(addr)){
                     if(addr.length()!=13||!req.getRemoteAddress().startsWith("192.168.0.25")){
+                        Utils.log("deny fs access from: "+req.getRemoteAddress()); // +req.getRemotePort
                         res.setStatusCodeWithSource(HttpStatusCodes.HTTP403_Forbidden);
                         res.setHeader("Connection","close");
                         res.writeString(403);
@@ -76,14 +79,19 @@ public class Bootstrap implements IComponentLoader,IHttpHandler{
     @Override
     public IHttpHandler loadComponent(String mod){return mods.get(mod);}
     public static void main(String[] args)throws Exception{
+        Utils.setOutputStream(new FileOutputStream("logs/operations.log",true));
         String fileServerRoot;
         if(args.length==1){
             fileServerRoot=args[0];
-            System.out.println("begin file server at: "+fileServerRoot);
-            System.out.println("allow connection in 192.168.0.250~255");
+            Utils.log("begin file server at: "+fileServerRoot);
+            Utils.log("allow connection in 192.168.0.250~255");
         }else fileServerRoot=null;
-        Utils.setOutputStream(new FileOutputStream("logs/operations.log",true));
         Bootstrap loader=new Bootstrap(fileServerRoot);
         loader.server.start();
+    }
+    @Override
+    public void close()throws Exception{
+        // cleanups for HttpServer.shutdown
+        // for example interrupt daemon threads created by IHttpHandlers
     }
 }
