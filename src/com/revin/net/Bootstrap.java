@@ -30,11 +30,7 @@ public class Bootstrap implements IComponentLoader,IHttpHandler{
         this.server=new HttpServer(this,10080);
     }
     public void attachModules(){
-        String databaseRoot="databases/";
-        try{
-            Class.forName("org.sqlite.JDBC");
-            Utils.log("database root: "+databaseRoot);
-        }catch(Exception e){Utils.err("error loading database driver");}
+        attachSqliteJDBC();
         // add databases here...
         mods.put("/echo",this);
         if(fileServerRoot!=null){
@@ -78,6 +74,13 @@ public class Bootstrap implements IComponentLoader,IHttpHandler{
     }
     @Override
     public IHttpHandler loadComponent(String mod){return mods.get(mod);}
+    public static void attachSqliteJDBC(){
+        String databaseRoot="databases/";
+        try{
+            Class.forName("org.sqlite.JDBC");
+            Utils.log("database root: "+databaseRoot);
+        }catch(Exception e){Utils.err("error loading database driver");}
+    }
     public static void main(String[] args)throws Exception{
         Utils.setOutputStream(new FileOutputStream("logs/operations.log",true));
         String fileServerRoot;
