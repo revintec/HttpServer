@@ -82,7 +82,7 @@ public class Compiler extends Thread implements FileVisitor<Path>{
             case "png":
                 process=runtime.exec(new String[]{"bin/pngquant","-f","-o",min,p});
                 break;
-            default: throw new IllegalArgumentException("unknown type: "+ext);
+            default:throw new IllegalArgumentException("unknown type: "+ext);
         }
         try{
             int exit=process.waitFor();

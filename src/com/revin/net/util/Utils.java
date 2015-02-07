@@ -110,9 +110,7 @@ public class Utils{
     public static String getSource(StackTraceElement st){
         return String.format("%s#%d:%s",stripClassName(st.getClassName()),st.getLineNumber(),st.getMethodName());
     }
-    // FIXME Fanfoo uses frame+2(intead of +1 we're using), why?
     public static String getSource(int frame){
-        // faster than Thread.currentThread().getStackTrace()
         StackTraceElement[]sts=new Throwable().getStackTrace();
         frame+=1;
         if(sts.length<=frame)
