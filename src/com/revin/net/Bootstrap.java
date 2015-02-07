@@ -74,12 +74,16 @@ public class Bootstrap implements IComponentLoader,IHttpHandler{
     }
     @Override
     public IHttpHandler loadComponent(String mod){return mods.get(mod);}
-    public static void attachSqliteJDBC(){
+    public static boolean attachSqliteJDBC(){
         String databaseRoot="databases/";
         try{
             Class.forName("org.sqlite.JDBC");
             Utils.log("database root: "+databaseRoot);
-        }catch(Exception e){Utils.err("error loading database driver");}
+            return true;
+        }catch(Exception e){
+            Utils.err("error loading database driver");
+            return false;
+        }
     }
     public static void main(String[] args)throws Exception{
         Utils.setOutputStream(new FileOutputStream("logs/operations.log",true));
@@ -94,6 +98,6 @@ public class Bootstrap implements IComponentLoader,IHttpHandler{
     }
     @Override
     public void close()throws Exception{
-        if(compiler!=null)compiler.interrupt();
+        if(compiler!=null)compiler.terminate();
     }
 }

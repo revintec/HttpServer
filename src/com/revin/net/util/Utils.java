@@ -46,9 +46,7 @@ public class Utils{
             e.printStackTrace();
         }if(!muteOutput)(error?System.err:System.out).print(out);
     }
-    /**
-     * @return milliseconds
-     */
+    /** @return milliseconds */
     public static long clock(){
         long clock=System.nanoTime();
         if(clock<=0)throw new IllegalStateException("clock()<=0");

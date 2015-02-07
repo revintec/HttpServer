@@ -25,6 +25,15 @@ public class Compiler extends Thread implements FileVisitor<Path>{
     protected final Path mins=Paths.get("mins");
     protected final Path ST1=root.resolve("lib/ui.js");
     protected final Pattern pattern=Pattern.compile(".*\\.(htm|css|js|html|png)",Pattern.CASE_INSENSITIVE);
+    public void terminate()throws InterruptedException{
+        //noinspection InfiniteLoopStatement
+        while(true){
+            if(isAlive()){
+                interrupt();
+                Thread.sleep(800);
+            }
+        }
+    }
     public Compiler()throws IOException{
         setName("compiler daemon");
         setDaemon(true);
@@ -111,12 +120,10 @@ public class Compiler extends Thread implements FileVisitor<Path>{
     public FileVisitResult postVisitDirectory(Path path,IOException e)throws IOException{
         if(e==null&&purging){
             try{Files.delete(path);}
-            catch(DirectoryNotEmptyException ignored){}
+            catch(DirectoryNotEmptyException ex){Utils.err(ex);}
         }return CONTINUE;
     }
-    /**
-     * SpecialTreatment for lib/ui.js
-     */
+    /** SpecialTreatment for lib/ui.js */
     protected void ST1(Path path)throws IOException{
         Utils.log("ST: "+ST1);
         String fileContent=new String(Files.readAllBytes(path));
