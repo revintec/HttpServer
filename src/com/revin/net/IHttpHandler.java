@@ -7,6 +7,7 @@ public interface IHttpHandler{
     /** close() will be called when HttpServer is shutting down */
     public static interface IComponentLoader extends AutoCloseable{
         IHttpHandler loadComponent(String mod);
+        @Override void close()throws Exception;
     }
     /**
      *

@@ -64,22 +64,23 @@ public class Compiler extends Thread implements FileVisitor<Path>{
             return CONTINUE;
         uptodate=false;
         Utils.log("Optimizing: "+p);
+//        p="./"+p; // prevents p starting with "-" // p should always starts with html/... not a "-"
         Process process;
         switch(ext){
             case "htm":case "html":
-                process=runtime.exec(new String[]{"java","-jar","htmCompiler.jar",
+                process=runtime.exec(new String[]{"java","-jar","bin/htmCompiler.jar",
                         p,"-o",min});
                 break;
             case "css":
-                process=runtime.exec(new String[]{"java","-jar","cssCompiler.jar",
+                process=runtime.exec(new String[]{"java","-jar","bin/cssCompiler.jar",
                         p,"-o",min});
                 break;
             case "js":
-                process=runtime.exec(new String[]{"java","-jar","jsCompiler.jar",
+                process=runtime.exec(new String[]{"java","-jar","bin/jsCompiler.jar",
                         "--js",p,"--js_output_file",min});
                 break;
             case "png":
-                process=runtime.exec(new String[]{"pngquant","-f","-o",min,p});
+                process=runtime.exec(new String[]{"bin/pngquant","-f","-o",min,p});
                 break;
             default: throw new IllegalArgumentException("unknown type: "+ext);
         }

@@ -14,12 +14,12 @@ public class Bootstrap implements IComponentLoader,IHttpHandler{
     protected IHttpHandler fs;
     protected final Map<String,IHttpHandler>mods=new HashMap<>();
     protected final Compiler compiler;
-    public static final boolean enableCompiler=false;
+    public static final boolean enableCompiler=true;
     public Bootstrap(String fileServerRoot)throws Exception{
         this.fileServerRoot=fileServerRoot;
         if(enableCompiler){
-            if(!System.getProperty("os.name").startsWith("Windows "))
-                throw new RuntimeException("Compiler requires Windows OS");
+//            if(!System.getProperty("os.name").startsWith("Windows "))
+//                throw new RuntimeException("Compiler requires Windows OS");
             compiler=new Compiler();
             synchronized(this.compiler){
                 compiler.start();
@@ -91,7 +91,6 @@ public class Bootstrap implements IComponentLoader,IHttpHandler{
     }
     @Override
     public void close()throws Exception{
-        // cleanups for HttpServer.shutdown
-        // for example interrupt daemon threads created by IHttpHandlers
+        if(compiler!=null)compiler.interrupt();
     }
 }
