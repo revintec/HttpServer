@@ -164,6 +164,10 @@ public class HttpResponse{
     public void writeLine(Object line)throws IOException{
         writeString(line+"\r\n");
     }
+    // TODO see http://wiki.nginx.org/XSendfile
+    public void sendFile(String uri){
+        throw new UnsupportedOperationException("NYI");
+    }
     // FIXME when this.ous is deprived, res.closeResponse() will throw NullPointerException
     public OutputStream getOutputStream(boolean cleanup,boolean deprive)throws IOException{
         if(isResponseClosed)throw new RuntimeException("Response closed");
